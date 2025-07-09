@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Obsidian to Html Converter</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <section class="section is-large">
+      <h1 class="title">Pick an obsidian file to turn into an HTML</h1>
+      <div class="buttons is-centered">
+        <button class='button is-white' id="OpenFile">Open Folder</button>
+        <button class='button is-warning' id="RunScript"> Run Script </button>
+      </div>
+    </div>
+    </section>
+    <section class="section is-small  is-centered">
+        <h1 id="FilePicked" class="subtitle">Pick a folder</h1>
+        <button class='button is-white' id="outputFile">Pick Output Folder</button>
+        <h2 id="outputFilePath" class="subtitle">Pick a folder to send the html to</h2>
+    </section>
+    <script defer src="render.js" ></script>
+  </body>
+</html>

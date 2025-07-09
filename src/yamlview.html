@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Yaml editor</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"/>
+  </head>
+  <body>
+    <section class="hero is-info">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">Yaml Editor</h1>
+          <h2 class="subtitle">Edit your YAML files here</h2>
+        </div>
+      </div>
+
+    </section>
+    <section class="section">
+        <textarea class="textarea is-medium is-loading is-warning" disabled id="yamlTextArea"></textarea>
+        <button class="button is-primary is-large" id="saveButton">Save YML file</button>
+        <button class="button is-large is-info" id="BuildWebsite">Choose output folder and Build website</button>
+    </section>
+
+    <script defer src="scripts/yamlviewer.js"></script>
+  </body>
+
+
+</html>
