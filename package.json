@@ -1,6 +1,6 @@
 {
-  "name": "test-app",
-  "productName": "test-app",
+  "name": "obsidian-to-mkdocs",
+  "productName": "obsidian-to-mkdocs",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": "src/index.js",
@@ -13,8 +13,8 @@
   },
   "keywords": [],
   "author": {
-    "name": "NYSBC-Rudra",
-    "email": "133771854+NYSBC-Rudra@users.noreply.github.com"
+    "name": "Rudra-Subramanian",
+    "email": "rudra.subramanian@gmail.com"
   },
   "license": "MIT",
   "dependencies": {
