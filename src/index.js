@@ -26,7 +26,7 @@ const createWindow = () => {
   mainWindow.setMenuBarVisibility(false);
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -73,16 +73,31 @@ ipcMain.handle('dialog:openDirectory', async () => {
   }
 });
 
+ipcMain.handle('dialog:openFile', async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    title: 'Select a file',
+    buttonLabel: 'Select File',
+    filters: [
+      { name: 'Markdown Files', extensions: ['md'] }]
+  });
+  if (result.canceled) {
+    return null;
+  } else {
+    return result.filePaths[0];
+  }
+});
 
+//Creating the html file by runnging the python script
 
-ipcMain.on('window:create', async (event, input, output) => {
+ipcMain.on('window:create_folder', async (event, input, output) => {
   if (pythonprocess){
     pythonprocess.kill();
   }
 
   console.log('Input folder:', input);
   console.log('Output folder:',output);
-  output_folder = path.dirname(output);
+  output_folder = output;
   pythonprocess = spawn('python3', [
     path.join(__dirname, 'MdtoHtmlconverter.py'),
     '--root_folder', input,
@@ -99,10 +114,41 @@ ipcMain.on('window:create', async (event, input, output) => {
   goToYaml();
 });
 
+ipcMain.on('window:create_file', async (event, input, output) => {
+  if (pythonprocess){
+    pythonprocess.kill();
+  }
+
+  console.log('Input folder:', input);
+  console.log('Output folder:',output);
+  output_folder = output;
+  pythonprocess = spawn('python3', [
+    path.join(__dirname, 'MdtoHtmlconverter.py'),
+    '--root_md', input,
+    '--output_folder', output,
+    '--site_name', 'test_site',
+    '--site_url', 'http://127.0.0.1:8000/'
+  ]);
+  pythonprocess.on('error', (error) => {
+    console.error('Error starting Python process:', error);
+    pythonprocess.kill();
+  });
+
+    // You can pass the URL to the new window if needed
+  goToYaml();
+});
+
+
+
+
+// Switching view to the yamlview.html
 
 const goToYaml = () => {
   console.log('Going to YAML view');
-  mainWindow.loadFile(path.join(__dirname, 'yamlview.html'));
+  setTimeout(() => {
+    mainWindow.loadFile(path.join(__dirname, 'yamlview.html'));
+  }, 3000);
+  //mainWindow.loadFile(path.join(__dirname, 'yamlview.html'));
   // viewer_window = new BrowserWindow({
   //   width: 500,
   //   height: 500,
@@ -115,18 +161,23 @@ const goToYaml = () => {
   // viewer_window.loadFile('http://127.0.0.1:8000/');
 }
 
+//Handles opening the yaml and getting the output text
+
+
 ipcMain.handle('dialog:openYaml', async () => {
   output_path = path.join(output_folder, 'mkdocs.yml');
   //console.log('Output path for yaml:', output_path);
   try {
     const output_text = await fs.promises.readFile(output_path, 'utf8');
-    console.log('index.js output', output_text);
     return output_text;
   } catch (error) {
     console.error('Error reading YAML file:', error);
     return '';
   }
 });
+
+// Handling Saving the YAML file when editing
+
 
 ipcMain.on('dialog:saveYaml', async (event, yamlContent) => {
   output_path = path.join(output_folder, 'mkdocs.yml');

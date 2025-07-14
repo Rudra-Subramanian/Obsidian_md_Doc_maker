@@ -7,16 +7,45 @@
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <section class="section is-large">
+    <section class="section is-small">
       <h1 class="title">Pick an obsidian file to turn into an HTML</h1>
       <div class="buttons is-centered">
-        <button class='button is-white' id="OpenFile">Open Folder</button>
+        <button class='button is-white' id="OpenFolder">Open Folder</button>
+        <button class='button is-white' id="OpenFile">Use a Single File</button>
         <button class='button is-warning' id="RunScript"> Run Script </button>
+        
       </div>
+      <h2 id="FolderPicked" class="subtitle">Pick a folder</h2>
     </div>
+
+
+
     </section>
+
+    <section class="section is-small">
+      <div class="field">
+        <label class="label">Website Name</label>
+        <div class="control">
+          <input class="input" type="text" id="WebsiteNameInput" placeholder="test_website">
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Logo Image Path</label>
+        <div class="control">
+          <button class="button is-info" id="logoPathButton">Locate Logo Image</button>
+          <span id="logoPathDisplay" style="margin-left: 1em;"></span>
+        </div>
+      </div>
+
+
+
+    </section>
+
+
+
+
+
     <section class="section is-small  is-centered">
-        <h1 id="FilePicked" class="subtitle">Pick a folder</h1>
         <button class='button is-white' id="outputFile">Pick Output Folder</button>
         <h2 id="outputFilePath" class="subtitle">Pick a folder to send the html to</h2>
     </section>
