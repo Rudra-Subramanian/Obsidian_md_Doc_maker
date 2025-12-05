@@ -52,6 +52,7 @@ class HTMLMaker:
 
 
     def create_output_files(self):
+        #difference between the files found in the structure and the files used by the markdown tree
         file_difference = self.found_files.difference(self.written_files)
         while( len(file_difference) > 0):
             for file_name in file_difference:
