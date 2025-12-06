@@ -90,3 +90,7 @@ typings/
 
 # Electron-Forge
 out/
+
+# pycache in source if testing htmlmaker
+
+/src/python_scripts/__pycache__

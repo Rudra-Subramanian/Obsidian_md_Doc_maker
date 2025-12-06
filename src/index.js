@@ -98,7 +98,9 @@ ipcMain.on('window:create_folder', async (event, input, output) => {
   console.log('Input folder:', input);
   console.log('Output folder:',output);
   output_folder = output;
-  pythonprocess = spawn('python3', [
+  console.log('Starting Python process...');
+  console.log(`python3 ${path.join(__dirname, 'MdtoHtmlconverter.py')} --root_folder ${input} --output_folder ${output} --site_name test_site --site_url http://127.0.0.1:8000/`);
+  pythonprocess = spawn('python', [
     path.join(__dirname, 'MdtoHtmlconverter.py'),
     '--root_folder', input,
     '--output_folder', output,
@@ -109,6 +111,7 @@ ipcMain.on('window:create_folder', async (event, input, output) => {
     console.error('Error starting Python process:', error);
     pythonprocess.kill();
   });
+
 
     // You can pass the URL to the new window if needed
   goToYaml();

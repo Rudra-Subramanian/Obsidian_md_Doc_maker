@@ -1,4 +1,4 @@
-from pathlib import Path
+from pathlib import Path, WindowsPath
 import re
 import os
 import shutil
@@ -6,12 +6,21 @@ import sys
 import argparse
 import networkx
 from mkdocs.commands import serve
+import platform
 
 
 class HTMLMaker:
     def __init__(self, root_folder, output_folder):
-        self.root_directory = Path(root_folder)
-        self.output_directory = Path(output_folder)
+        self.root_directory = root_folder
+        self.output_directory = output_folder
+        if platform.system() == 'Windows':
+            #self.root_directory.replace('\\', '/')
+            #self.output_directory.replace('\\', '/')
+            self.root_directory = WindowsPath(self.root_directory)
+            self.output_directory = WindowsPath(self.output_directory)
+        else:
+            self.root_directory = Path(self.root_directory)
+            self.output_directory = Path(self.output_directory)
         if self.output_directory.joinpath('mkdocs.yml').is_file():
             os.remove(self.output_directory.joinpath('mkdocs.yml'))
         self.all_files = {}
