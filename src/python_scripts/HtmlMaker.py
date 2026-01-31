@@ -233,10 +233,19 @@ It will make the specified file the new index file and create a directory struct
 '''
 class FileHTMLMaker:
     def __init__(self, root_file, output_folder):
-        self.root_file = Path(root_file)
+        
+
+
+        if platform.system() == 'Windows':
+            #self.root_directory.replace('\\', '/')
+            #self.output_directory.replace('\\', '/')
+            self.root_file = WindowsPath(root_file)
+            self.output_directory = WindowsPath(output_folder)
+        else:
+            self.output_directory = Path(output_folder)
+            self.root_file = Path(root_file)
         self.root_file_name = self.root_file.stem
         self.root_directory = self.root_file.parent
-        self.output_directory = Path(output_folder)
         self.all_files = {}
         self.written_files = set()
         self.found_files = set()

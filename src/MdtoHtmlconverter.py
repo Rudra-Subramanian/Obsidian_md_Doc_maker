@@ -39,8 +39,8 @@ if __name__ == "__main__":
     parser.add_argument('--root_md', required=False, help='Root markdown file to convert into index.md')
     parser.add_argument('--output_folder', required=True, help='Output folder for generated HTML files')
     parser.add_argument('--logo', required=False, help='Path to the site logo')
-    parser.add_argument('--site_name', required=True, help='Name of the site')
-    parser.add_argument('--site_url', required=True, help='URL of the site')
+    parser.add_argument('--site_name', required=False, help='Name of the site')
+    parser.add_argument('--site_url', required=False, help='URL of the site')
     '''
     ADD build argument and make everything else not necessary to be true then add if statements to check and give statements on what is wrong
     '''
@@ -49,6 +49,7 @@ if __name__ == "__main__":
 
     root_folder = args.root_folder
     root_file = args.root_md
+    print(args)
     if root_file and root_folder:
         print("Error: Please provide either --root_folder or --root_md, not both.")
         raise ValueError("Please provide either --root_folder or --root_md, not both.")
@@ -58,7 +59,12 @@ if __name__ == "__main__":
     site_url = args.site_url
     if logo_path:
         logo_path = Path(logo_path)
+    if not site_name:
+        site_name = "My Site"
+    if not site_url:
+        site_url = "http://127.0.0.1:8000/"
     print(f"Root folder: {root_folder}"
+          f"\nRoot file: {root_file}"
           f"\nOutput folder: {output_folder}"
           f"\nLogo: {logo_path}"
           f"\nSite name: {site_name}"

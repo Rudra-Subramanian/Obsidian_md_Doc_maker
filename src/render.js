@@ -17,6 +17,25 @@ outputFileButton.onclick = getOutputFolder;
 loadFileButton.onclick = getObsidianFolder;
 loadmdFile.onclick = getObsidianFile;
 runScriptButton.onclick = runScript;
+logoloader.onclick = loadLogoPath;
+
+
+
+async function loadLogoPath() {
+    const logo_file_path = await window.electronAPI.openFile();
+    if (logo_file_path) {
+        logoPath.innerText = logo_file_path;
+        logoloader.classList.add('is-success');
+        logoloader.classList.remove('is-white');
+        logoloader.classList.remove('is-warning');
+        console.log('Logo file path set to:', logo_file_path);
+    } else {
+        logoloader.classList.add('is-warning');
+        logoloader.classList.remove('is-white');
+        logoloader.classList.remove('is-success');
+        console.log('No logo file path selected.');
+    }
+}
 
 
 async function getObsidianFolder() {
@@ -90,10 +109,14 @@ async function runScript() {
         loadFileButton.classList.contains('is-success')){
         const inputfile = filePicked.innerText;
         const outputfile = outputFilePath.innerText;
+        const logo_file = logoPath.innerText;
+        const site_name = websiteName.value;
+        console.log('Website name:', site_name);
+        console.log('Logo file:', logo_file);
         if (inputfile !== '' && outputfile !== ''){
             console.log('Running script with output folder:', outputfile);
             console.log('Running script with input folder:', inputfile);
-            window.electronAPI.openDocumentWindow(inputfile, outputfile);
+            window.electronAPI.openDocumentWindow(inputfile, outputfile, logo_file, site_name);
         } else {
             console.error('Input or output folder path is empty.');
         }

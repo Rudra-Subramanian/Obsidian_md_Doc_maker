@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog, utilityProcess } = require('electron');
 const path = require('node:path');
-const { spawn } = require("child_process");
+const { spawn, exec } = require("child_process");
 const fs = require ('fs');
 
 newprocess = null;
@@ -79,7 +79,8 @@ ipcMain.handle('dialog:openFile', async () => {
     title: 'Select a file',
     buttonLabel: 'Select File',
     filters: [
-      { name: 'Markdown Files', extensions: ['md'] }]
+      { name: 'Markdown Files', extensions: ['md'] },
+    { name: 'image files', extensions: ['png', 'jpg', 'jpeg', 'gif', 'svg'] },]
   });
   if (result.canceled) {
     return null;
@@ -90,23 +91,39 @@ ipcMain.handle('dialog:openFile', async () => {
 
 //Creating the html file by runnging the python script
 
-ipcMain.on('window:create_folder', async (event, input, output) => {
+ipcMain.on('window:create_folder', async (event, input, output, logoPath, site_name) => {
   if (pythonprocess){
     pythonprocess.kill();
   }
+  console.log('Creating folder with logo path:', logoPath);
+  console.log('Site name:', site_name);
 
+  if(!site_name){
+    console.log('No site name provided, using default.');
+    site_name = 'Documentation';
+  }
   console.log('Input folder:', input);
   console.log('Output folder:',output);
   output_folder = output;
   console.log('Starting Python process...');
-  console.log(`python3 ${path.join(__dirname, 'MdtoHtmlconverter.py')} --root_folder ${input} --output_folder ${output} --site_name test_site --site_url http://127.0.0.1:8000/`);
-  pythonprocess = spawn('python', [
+  if(!logoPath){
+    pythonprocess = spawn('python', [
     path.join(__dirname, 'MdtoHtmlconverter.py'),
     '--root_folder', input,
     '--output_folder', output,
-    '--site_name', 'test_site',
+    '--site_name', site_name,
     '--site_url', 'http://127.0.0.1:8000/'
   ]);
+  } else{
+    pythonprocess = spawn('python', [
+    path.join(__dirname, 'MdtoHtmlconverter.py'),
+    '--root_folder', input,
+    '--output_folder', output,
+    '--site_name', site_name,
+    '--logo', logoPath,
+    '--site_url', 'http://127.0.0.1:8000/'
+  ]);}
+
   pythonprocess.on('error', (error) => {
     console.error('Error starting Python process:', error);
     pythonprocess.kill();
@@ -114,7 +131,7 @@ ipcMain.on('window:create_folder', async (event, input, output) => {
 
 
     // You can pass the URL to the new window if needed
-  goToYaml();
+  //goToYaml();
 });
 
 ipcMain.on('window:create_file', async (event, input, output) => {
@@ -125,17 +142,20 @@ ipcMain.on('window:create_file', async (event, input, output) => {
   console.log('Input folder:', input);
   console.log('Output folder:',output);
   output_folder = output;
-  pythonprocess = spawn('python3', [
+  pythonprocess = spawn('python', [
     path.join(__dirname, 'MdtoHtmlconverter.py'),
     '--root_md', input,
-    '--output_folder', output,
-    '--site_name', 'test_site',
-    '--site_url', 'http://127.0.0.1:8000/'
+    '--output_folder', output
   ]);
   pythonprocess.on('error', (error) => {
     console.error('Error starting Python process:', error);
     pythonprocess.kill();
   });
+  console.log('going to yaml view');
+  pythonprocess.stdout.on('data', (data) => {
+    console.log(`Python stdout: ${data}`);
+  });
+
 
     // You can pass the URL to the new window if needed
   goToYaml();
@@ -191,6 +211,18 @@ ipcMain.on('dialog:saveYaml', async (event, yamlContent) => {
   } catch (error) {
     console.error('Error saving YAML file:', error);
   }
+});
+
+
+ipcMain.on('dialog:build_website', async (event) => {
+  console.log("Building website from this directory:\n")
+  console.log("output folder:", output_folder);
+  console.log('killing website running');
+  if (pythonprocess){
+    console.log('killing website running');
+    pythonprocess.kill();
+  }
+  const { stdout, stderr} = await exec('mkdocs build', { cwd: output_folder});
 });
 
 

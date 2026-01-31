@@ -1,5 +1,8 @@
 const text_area = document.getElementById('yamlTextArea');
 const saveButton = document.getElementById('saveButton');
+const buildButton = document.getElementById('BuildWebsite');
+
+buildButton.onclick = BuildWebsite;
 
 saveButton.onclick = SaveFile;
 
@@ -38,4 +41,10 @@ async function SaveFile() {
     const yamlContent = text_area.value;
     console.log('Saving YAML content:', yamlContent);
     window.electronAPI.saveYaml(yamlContent);
+}
+
+
+async function BuildWebsite() {
+    console.log('Building website...');
+    window.electronAPI.buildWebsite();
 }
